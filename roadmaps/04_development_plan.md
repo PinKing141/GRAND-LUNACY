@@ -8,28 +8,24 @@ Goal: Make the game playable in terminal.
 
 Build:
 
-```text
-Character creation
-Hidden attributes
-Visible grade system
-Basic training
-Basic monsters
-Basic combat
-Basic inspection
-Save/load
-```
+- [x] Character creation
+- [x] Hidden attributes
+- [x] Visible grade system
+- [x] Basic training
+- [x] Basic monsters
+- [x] Basic combat
+- [x] Basic inspection
+- [x] Save/load
 
 Player should be able to:
 
-```text
-Create character
-Train
-Inspect monster
-Fight monster
-Gain encounter data
-View rough character sheet
-Quit and reload
-```
+- [x] Create character
+- [x] Train
+- [x] Inspect monster
+- [x] Fight monster
+- [x] Gain encounter data
+- [x] View rough character sheet
+- [x] Quit and reload
 
 ---
 
