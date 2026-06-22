@@ -91,14 +91,14 @@ Player should feel:
 Add:
 
 ```text
-Combat choices
-Observe action
-Retreat action
-Weaknesses
-Terrain
-Injuries
-Basic equipment
-Enemy behavior
+[x] Combat choices
+[x] Observe action
+[x] Retreat action
+[x] Weaknesses
+[x] Terrain
+[x] Injuries
+[x] Basic equipment
+[x] Enemy behavior
 ```
 
 Player should feel:

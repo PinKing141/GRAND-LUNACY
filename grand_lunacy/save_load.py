@@ -51,6 +51,7 @@ def _player_to_data(player: Player) -> dict[str, Any]:
         "insight": player.insight,
         "bestiary": player.bestiary,
         "encyclopedia": sorted(player.encyclopedia),
+        "injuries": player.injuries,
     }
 
 
@@ -80,4 +81,5 @@ def _player_from_data(data: dict[str, Any]) -> Player:
         insight=data.get("insight", 0.0),
         bestiary=data.get("bestiary", {}),
         encyclopedia=set(data.get("encyclopedia", [])),
+        injuries=data.get("injuries", {}),
     )
