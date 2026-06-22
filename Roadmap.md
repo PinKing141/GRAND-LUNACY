@@ -2668,12 +2668,12 @@ Player should feel:
 Add:
 
 ```text
-Insight skill
-Monster knowledge levels
-Bestiary entries
-Knowledge from fights
-Knowledge from books
-Inaccurate estimates
+[x] Insight skill
+[x] Monster knowledge levels
+[x] Bestiary entries
+[x] Knowledge from fights
+[x] Knowledge from books
+[x] Inaccurate estimates
 ```
 
 Player should feel:
