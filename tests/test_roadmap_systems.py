@@ -141,3 +141,39 @@ def test_fighting_records_bestiary_knowledge_from_combat():
     fight(player, goblin)
     assert player.bestiary["Goblin"] == 1
     assert knowledge_level(player, "Goblin") == "Glimpsed"
+
+
+def test_combat_observe_and_retreat_actions_build_knowledge_without_levels():
+    from grand_lunacy.combat import fight
+
+    player = create_player()
+    goblin = create_world()[0]
+
+    observed = fight(player, goblin, action="observe", terrain="forest")
+    assert observed.victory is False
+    assert observed.retreated is False
+    assert observed.observations
+    assert player.bestiary["Goblin"] == 2
+    assert player.insight >= 1.5
+
+    retreated = fight(player, goblin, action="retreat", terrain="forest")
+    assert retreated.retreated is True
+    assert retreated.injury is None
+
+
+def test_combat_uses_weaknesses_terrain_injuries_equipment_and_enemy_behavior():
+    from grand_lunacy.combat import Equipment, fight
+
+    player = create_player()
+    wolf = create_world()[1]
+
+    bad_fight = fight(player, wolf, action="attack", terrain="open", weapon=Equipment("bare hands"), armor=Equipment("plain clothes"))
+    assert bad_fight.victory is False
+    assert bad_fight.injury is not None
+    assert player.injuries
+
+    prepared = create_player()
+    read_encyclopedia(prepared, "Wolf")
+    good_fight = fight(prepared, wolf, action="attack", terrain="ruins", weapon=Equipment("boar spear", power=8), armor=Equipment("mail", defense=4))
+    assert good_fight.victory is True
+    assert "Gear, terrain, knowledge" in good_fight.message

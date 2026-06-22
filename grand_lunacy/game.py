@@ -34,7 +34,7 @@ def main() -> None:
     monsters = create_world()
     print("=== GRAND LUNACY ===")
     while True:
-        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. View Character\n8. View Bestiary\n9. Save Game\n0. Save and Quit")
+        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. Observe Monster\n8. Retreat Drill\n9. View Character\n10. View Bestiary\n11. Save Game\n0. Save and Quit")
         choice = input("> ")
         if choice == "1":
             print("\n".join(train(player, "running")))
@@ -51,9 +51,21 @@ def main() -> None:
         elif choice == "6":
             print(fight(player, random.choice(monsters)).message)
         elif choice == "7":
+            monster = random.choice(monsters)
+            result = fight(player, monster, action="observe", terrain="forest")
+            print(result.message)
+        elif choice == "8":
+            monster = random.choice(monsters)
+            result = fight(player, monster, action="retreat", terrain="forest")
+            print(result.message)
+        elif choice == "9":
             print("\nVisible Attribute Grades")
             print(player.visible_attributes())
             print(f"Fatigue: {player.fatigue:.0f}/100")
+            if player.injuries:
+                print("Injuries:")
+                for injury, severity in player.injuries.items():
+                    print(f" - {injury}: {severity:.1f}")
             print("Skills:")
             for skill in player.skills.values():
                 print(f" - {skill.name}: {skill.rank}")
@@ -64,7 +76,7 @@ def main() -> None:
                     print(f" - {talent.name}: {talent.description}")
             else:
                 print(" - None discovered")
-        elif choice == "8":
+        elif choice == "10":
             entries = bestiary(player, monsters)
             if not entries:
                 print("No bestiary entries yet. Fight, observe, or read first.")
@@ -73,7 +85,7 @@ def main() -> None:
                 print(f"Encounters: {entry.encounters}; Book studied: {entry.book_studied}")
                 print(entry.attributes)
                 print(entry.notes)
-        elif choice == "9":
+        elif choice == "11":
             print(f"Saved to {save_player(player)}.")
         elif choice == "0":
             print(f"Saved to {save_player(player)}.")

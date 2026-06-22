@@ -42,6 +42,7 @@ class Player(Character):
     insight: float = 0.0
     bestiary: dict[str, int] = field(default_factory=dict)
     encyclopedia: set[str] = field(default_factory=set)
+    injuries: dict[str, float] = field(default_factory=dict)
 
     def record_encounter(self, species_name: str, amount: int = 1) -> None:
         self.bestiary[species_name] = self.bestiary.get(species_name, 0) + amount
