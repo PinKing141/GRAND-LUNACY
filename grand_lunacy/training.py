@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from .attributes import AttributeName
 from .characters import Character
+from .skills import discover_talents
 
 
 @dataclass(frozen=True)
@@ -56,8 +57,14 @@ def train(character: Character, activity_key: str) -> list[str]:
 
     for skill_name, base_gain in activity.skill_gains.items():
         gain = base_gain * fatigue_mod * character.talent_multiplier(skill_name)
-        character.skill(skill_name).improve(gain)
-        messages.append(f"{skill_name} proficiency grows through practice.")
+        skill = character.skill(skill_name)
+        before_rank = skill.rank
+        skill.improve(gain)
+        messages.append(f"{skill_name} proficiency grows through practice ({skill.rank}).")
+        if skill.rank != before_rank:
+            messages.append(f"{skill_name} rank rose from {before_rank} to {skill.rank}.")
+        character.talents, discovery_messages = discover_talents(character.talents, skill)
+        messages.extend(discovery_messages)
 
     character.fatigue = min(100.0, character.fatigue + activity.fatigue)
     if character.fatigue > 80:

@@ -2,6 +2,7 @@ from grand_lunacy.attributes import AttributeName, AttributeSet, grade
 from grand_lunacy.game import create_player
 from grand_lunacy.knowledge import analyze, read_encyclopedia
 from grand_lunacy.potential import PotentialSet
+from grand_lunacy.skills import BASIC_TALENTS, Skill, skill_rank
 from grand_lunacy.save_load import load_player, save_player
 from grand_lunacy.training import train
 from grand_lunacy.world import create_world
@@ -75,3 +76,31 @@ def test_save_load_preserves_player_progress(tmp_path):
     assert loaded.bestiary == {"Goblin": 2}
     assert loaded.encyclopedia == {"Goblin"}
     assert loaded.skill("Athletics").proficiency == player.skill("Athletics").proficiency
+
+
+def test_skill_ranks_match_roadmap_thresholds():
+    assert skill_rank(0) == "Untrained"
+    assert skill_rank(5) == "Beginner"
+    assert skill_rank(15) == "Novice"
+    assert skill_rank(30) == "Apprentice"
+    assert skill_rank(50) == "Adept"
+    assert skill_rank(70) == "Expert"
+    assert skill_rank(85) == "Master"
+    assert skill_rank(95) == "Grandmaster"
+    assert skill_rank(99.5) == "Saint"
+
+
+def test_relevant_training_discovers_hidden_talent_and_then_multiplies_growth():
+    player = create_player()
+    player.skills["Swordsmanship"] = Skill("Swordsmanship", 4.9)
+    messages = train(player, "sword")
+    assert any("Talent Discovered: Sword Genius" in message for message in messages)
+    assert any(talent.name == "Sword Genius" and talent.discovered for talent in player.talents)
+
+    before = player.skill("Swordsmanship").proficiency
+    train(player, "sword")
+    assert player.skill("Swordsmanship").proficiency - before > 0.20
+
+
+def test_basic_talent_list_contains_roadmap_examples():
+    assert {"Sword Genius", "Mana Sensitivity", "Acting Genius"}.issubset(BASIC_TALENTS)

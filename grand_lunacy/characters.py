@@ -28,7 +28,7 @@ class Character:
         lowered = skill_name.lower()
         multiplier = 1.0
         for talent in self.talents:
-            if lowered in talent.name.lower() or "genius" in talent.name.lower() or "prodigy" in talent.name.lower():
+            if talent.discovered and talent.affects(skill_name):
                 multiplier = max(multiplier, talent.multiplier)
         return multiplier
 
