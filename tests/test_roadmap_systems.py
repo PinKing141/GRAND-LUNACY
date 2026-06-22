@@ -2,6 +2,7 @@ from grand_lunacy.attributes import AttributeName, AttributeSet, grade
 from grand_lunacy.game import create_player
 from grand_lunacy.knowledge import analyze, read_encyclopedia
 from grand_lunacy.potential import PotentialSet
+from grand_lunacy.save_load import load_player, save_player
 from grand_lunacy.training import train
 from grand_lunacy.world import create_world
 
@@ -56,3 +57,21 @@ def test_potential_limit_break_raises_cap():
     original = potential.natural_cap(AttributeName.VITALITY)
     potential.limit_break(AttributeName.VITALITY, 10)
     assert potential.natural_cap(AttributeName.VITALITY) == original + 10
+
+
+def test_save_load_preserves_player_progress(tmp_path):
+    player = create_player()
+    train(player, "running")
+    read_encyclopedia(player, "Goblin")
+    player.record_encounter("Goblin", 2)
+
+    save_path = tmp_path / "save.json"
+    save_player(player, save_path)
+    loaded = load_player(save_path)
+
+    assert loaded.name == player.name
+    assert loaded.attrs.agility == player.attrs.agility
+    assert loaded.fatigue == player.fatigue
+    assert loaded.bestiary == {"Goblin": 2}
+    assert loaded.encyclopedia == {"Goblin"}
+    assert loaded.skill("Athletics").proficiency == player.skill("Athletics").proficiency

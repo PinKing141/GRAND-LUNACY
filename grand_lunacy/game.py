@@ -10,6 +10,7 @@ from .combat import fight
 from .knowledge import analyze, read_encyclopedia
 from .potential import PotentialSet
 from .skills import Skill, Talent, Trait
+from .save_load import DEFAULT_SAVE_PATH, load_player, save_player
 from .training import recover, train
 from .world import create_world
 
@@ -26,11 +27,14 @@ def create_player() -> Player:
 
 
 def main() -> None:
-    player = create_player()
+    if DEFAULT_SAVE_PATH.exists():
+        player = load_player(DEFAULT_SAVE_PATH)
+    else:
+        player = create_player()
     monsters = create_world()
     print("=== GRAND LUNACY ===")
     while True:
-        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. View Character\n0. Quit")
+        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. View Character\n8. Save Game\n0. Save and Quit")
         choice = input("> ")
         if choice == "1":
             print("\n".join(train(player, "running")))
@@ -53,5 +57,8 @@ def main() -> None:
             print("Skills:")
             for skill in player.skills.values():
                 print(f" - {skill.name}: {skill.proficiency:.1f}%")
+        elif choice == "8":
+            print(f"Saved to {save_player(player)}.")
         elif choice == "0":
+            print(f"Saved to {save_player(player)}.")
             break
