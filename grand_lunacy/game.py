@@ -9,7 +9,7 @@ from .characters import Player
 from .combat import fight
 from .knowledge import analyze, read_encyclopedia
 from .potential import PotentialSet
-from .skills import Skill, Talent, Trait
+from .skills import BASIC_TALENTS, Skill, Trait
 from .save_load import DEFAULT_SAVE_PATH, load_player, save_player
 from .training import recover, train
 from .world import create_world
@@ -20,7 +20,7 @@ def create_player() -> Player:
         name="Adventurer",
         attrs=AttributeSet(15, 12, 12, 8, 9, 6, 5),
         potential=PotentialSet.from_rank("D", agility="C", willpower="C", luck="E"),
-        talents=[Talent("Sword Genius", "Learns sword skills rapidly.", multiplier=1.8)],
+        talents=[BASIC_TALENTS["Sword Genius"], BASIC_TALENTS["Scholar's Memory"]],
         traits=[Trait("Obsessive", "Improves through repetition.")],
         skills={"Swordsmanship": Skill("Swordsmanship", 5.0)},
     )
@@ -56,7 +56,14 @@ def main() -> None:
             print(f"Fatigue: {player.fatigue:.0f}/100")
             print("Skills:")
             for skill in player.skills.values():
-                print(f" - {skill.name}: {skill.proficiency:.1f}%")
+                print(f" - {skill.name}: {skill.rank}")
+            print("Known Talents:")
+            known_talents = [talent for talent in player.talents if talent.discovered]
+            if known_talents:
+                for talent in known_talents:
+                    print(f" - {talent.name}: {talent.description}")
+            else:
+                print(" - None discovered")
         elif choice == "8":
             print(f"Saved to {save_player(player)}.")
         elif choice == "0":

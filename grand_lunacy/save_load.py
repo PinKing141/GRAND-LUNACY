@@ -35,7 +35,16 @@ def _player_to_data(player: Player) -> dict[str, Any]:
             "ranks": {attribute.name.lower(): player.potential.ranks[attribute] for attribute in ATTRIBUTES},
             "bonus_caps": {attribute.name.lower(): value for attribute, value in (player.potential.bonus_caps or {}).items()},
         },
-        "talents": [talent.__dict__ for talent in player.talents],
+        "talents": [
+            {
+                "name": talent.name,
+                "description": talent.description,
+                "multiplier": talent.multiplier,
+                "skill_tags": list(talent.skill_tags),
+                "discovered": talent.discovered,
+            }
+            for talent in player.talents
+        ],
         "traits": [trait.__dict__ for trait in player.traits],
         "skills": {name: skill.proficiency for name, skill in player.skills.items()},
         "fatigue": player.fatigue,
@@ -55,7 +64,16 @@ def _player_from_data(data: dict[str, Any]) -> Player:
             ranks={AttributeName[key.upper()]: value for key, value in potential["ranks"].items()},
             bonus_caps={AttributeName[key.upper()]: value for key, value in potential.get("bonus_caps", {}).items()},
         ),
-        talents=[Talent(**talent) for talent in data.get("talents", [])],
+        talents=[
+            Talent(
+                name=talent["name"],
+                description=talent["description"],
+                multiplier=talent.get("multiplier", 1.0),
+                skill_tags=tuple(talent.get("skill_tags", ())),
+                discovered=talent.get("discovered", True),
+            )
+            for talent in data.get("talents", [])
+        ],
         traits=[Trait(**trait) for trait in data.get("traits", [])],
         skills={name: Skill(name, proficiency) for name, proficiency in data.get("skills", {}).items()},
         fatigue=data.get("fatigue", 0.0),

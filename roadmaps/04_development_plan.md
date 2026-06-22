@@ -34,12 +34,12 @@ Player should be able to:
 Add:
 
 ```text
-Natural potentials
-Soft caps
-Training fatigue
-Recovery
-Training messages
-Attribute growth formulas
+[x] Natural potentials
+[x] Soft caps
+[x] Training fatigue
+[x] Recovery
+[x] Training messages
+[x] Attribute growth formulas
 ```
 
 Player should feel:
@@ -53,12 +53,12 @@ Player should feel:
 Add:
 
 ```text
-Skill proficiency
-Skill ranks
-Talents
-Talent multipliers
-Talent discovery
-Basic talent list
+[x] Skill proficiency
+[x] Skill ranks
+[x] Talents
+[x] Talent multipliers
+[x] Talent discovery
+[x] Basic talent list
 ```
 
 Player should feel:
