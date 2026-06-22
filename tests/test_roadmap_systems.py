@@ -104,3 +104,40 @@ def test_relevant_training_discovers_hidden_talent_and_then_multiplies_growth():
 
 def test_basic_talent_list_contains_roadmap_examples():
     assert {"Sword Genius", "Mana Sensitivity", "Acting Genius"}.issubset(BASIC_TALENTS)
+
+
+def test_bestiary_entries_track_levels_sources_and_rough_estimates():
+    from grand_lunacy.knowledge import bestiary, bestiary_entry, knowledge_level
+
+    player = create_player()
+    goblin = create_world()[0]
+
+    assert knowledge_level(player, "Goblin") == "Unknown"
+    player.record_encounter("Goblin")
+    rough = bestiary_entry(player, goblin.species)
+    assert rough.level == "Glimpsed"
+    assert rough.encounters == 1
+    assert rough.reliability == "rough"
+    assert rough.attributes["STR"] == "F"
+    assert rough.attributes["AGI"].endswith("~")
+    assert rough.attributes["LUK"] == "???"
+    assert "Fragmentary" in rough.notes
+
+    read_encyclopedia(player, "Goblin")
+    studied = bestiary_entry(player, goblin.species)
+    assert studied.level == "Studied"
+    assert studied.book_studied is True
+    assert studied.attributes["VIT"] == "F"
+    assert studied.notes == goblin.species.notes
+    assert [entry.species for entry in bestiary(player, create_world())] == ["Goblin"]
+
+
+def test_fighting_records_bestiary_knowledge_from_combat():
+    from grand_lunacy.knowledge import knowledge_level
+    from grand_lunacy.combat import fight
+
+    player = create_player()
+    goblin = create_world()[0]
+    fight(player, goblin)
+    assert player.bestiary["Goblin"] == 1
+    assert knowledge_level(player, "Goblin") == "Glimpsed"

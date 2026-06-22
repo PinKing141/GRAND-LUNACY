@@ -7,7 +7,7 @@ import random
 from .attributes import AttributeSet
 from .characters import Player
 from .combat import fight
-from .knowledge import analyze, read_encyclopedia
+from .knowledge import analyze, bestiary, read_encyclopedia
 from .potential import PotentialSet
 from .skills import BASIC_TALENTS, Skill, Trait
 from .save_load import DEFAULT_SAVE_PATH, load_player, save_player
@@ -34,7 +34,7 @@ def main() -> None:
     monsters = create_world()
     print("=== GRAND LUNACY ===")
     while True:
-        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. View Character\n8. Save Game\n0. Save and Quit")
+        print("\n1. Train Running\n2. Sword Sparring\n3. Rest\n4. Read Monster Encyclopedia (Goblin)\n5. Inspect Monster\n6. Fight Monster\n7. View Character\n8. View Bestiary\n9. Save Game\n0. Save and Quit")
         choice = input("> ")
         if choice == "1":
             print("\n".join(train(player, "running")))
@@ -65,6 +65,15 @@ def main() -> None:
             else:
                 print(" - None discovered")
         elif choice == "8":
+            entries = bestiary(player, monsters)
+            if not entries:
+                print("No bestiary entries yet. Fight, observe, or read first.")
+            for entry in entries:
+                print(f"\n{entry.species} — {entry.level} ({entry.reliability})")
+                print(f"Encounters: {entry.encounters}; Book studied: {entry.book_studied}")
+                print(entry.attributes)
+                print(entry.notes)
+        elif choice == "9":
             print(f"Saved to {save_player(player)}.")
         elif choice == "0":
             print(f"Saved to {save_player(player)}.")
